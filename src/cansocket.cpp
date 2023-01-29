@@ -45,7 +45,7 @@ namespace cansocket
   }
   CanSocket::CanSocket(std::string canChannelName,
                        std::vector<unsigned int> &canIds,
-                       eSocketType socketType = eSocketType::READ_WRITE)
+                       SocketType socketType = SocketType::READ_WRITE)
       : socketType(socketType)
   {
     socketFD = -1;
@@ -150,9 +150,9 @@ namespace cansocket
     /**
      *  Shutdown read or write funtionality if necessary
      */
-    if (socketType != eSocketType::READ_WRITE)
+    if (socketType != SocketType::READ_WRITE)
     {
-      if (shutdown(socket, static_cast<std::underlying_type<eSocketType>::type>(socketType)) < 0)
+      if (shutdown(socket, static_cast<std::underlying_type<SocketType>::type>(socketType)) < 0)
       {
         throw std::runtime_error("Could not assign operation mode to socket");
       }

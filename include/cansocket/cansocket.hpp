@@ -26,13 +26,13 @@ namespace cansocket
   class CanSocket
   {
   public:
-    enum class eSocketType : unsigned char
+    enum class SocketType : unsigned char
     {
       WRITE_ONLY,
       READ_ONLY,
       READ_WRITE
     };
-    explicit CanSocket(std::string canChannelName, std::vector<unsigned int> &canIds, eSocketType socketType);
+    explicit CanSocket(std::string canChannelName, std::vector<unsigned int> &canIds, SocketType socketType);
     ~CanSocket();
     /**
      *  Need to maintain a move policy
@@ -67,7 +67,7 @@ namespace cansocket
     static const constexpr unsigned int CAN_ID_OFFSET = 0x05;
     int socketFD;
     struct sockaddr_can addr;
-    eSocketType socketType;
+    SocketType socketType;
     /**
      * Delete Value semantics
      */
