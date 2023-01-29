@@ -20,7 +20,7 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(Boost REQUIRED)
 
 add_library(cansocket src/cansocket.cpp)
 target_include_directories(cansocket PUBLIC
@@ -45,6 +45,8 @@ install(
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
+  find_package(ament_cmake_gtest)
+  find_package(ament_cmake_cppcheck REQUIRED)
   # the following line skips the linter which checks for copyrights
   # uncomment the line when a copyright and license is not present in all source files
   #set(ament_cmake_copyright_FOUND TRUE)
@@ -52,6 +54,8 @@ if(BUILD_TESTING)
   # uncomment the line when this package is not in a git repo
   #set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
+  ament_add_gtest(${PROJECT_NAME}_test test/main.cpp)
+  target_link_libraries(${PROJECT_NAME}_test cansocket)
 endif()
 
 ament_export_include_directories(
