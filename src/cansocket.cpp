@@ -94,7 +94,7 @@ namespace cansocket
     auto recieveFilters = std::vector<can_filter>();
     for (const auto &id : canIds)
     {
-      recieveFilters.push_back(can_filter{(id | CAN_ID_OFFSET), 0xFFFF});
+      recieveFilters.push_back(can_filter{(id + CAN_ID_OFFSET), 0xFFFF});
     }
     /**
      * Set RAW filters on the socket
@@ -132,9 +132,9 @@ namespace cansocket
     if(setsockopt(socket, SOL_CAN_RAW, CAN_RAW_FD_FRAMES, &canFdOn, sizeof(canFdOn))<0)
       throw std::runtime_error("Could could not switch to Can FD Mode");
     /**
-     * Set socket's timeout to 1 millisecond
+     * Set socket's timeout to 20 millisecond
      */
-    struct timeval tv = {0, 1000};
+    struct timeval tv = {0, 20'000};
     if (setsockopt(socket, SOL_SOCKET, SO_RCVTIMEO, (const char *)&tv, sizeof tv) < 0)
     {
       perror("Error setting CAN timeout");
@@ -143,7 +143,6 @@ namespace cansocket
     /**
      * Bind socket to address
      */
-
     if (bind(socket, (struct sockaddr *)(&addr), sizeof(addr)) < 0){
       perror("Bind Failed");
       throw std::runtime_error("Could not bind socket");
@@ -187,7 +186,7 @@ namespace cansocket
     {
       throw std::runtime_error("read incomplete frame");
     }
-    return {cfd.can_id,{std::begin(cfd.data), std::end(cfd.data)}};
+    return {cfd.can_id,{std::begin(cfd.data), std::end(cfd.data)},cfd.len};
   }
 
   void CanSocket::write(CanFDMsg message,bool brs) const
@@ -205,6 +204,16 @@ namespace cansocket
     if (::write(socketFD, &cfdFrame, CANFD_MTU) != CANFD_MTU) {
       throw std::runtime_error("Socket write failed");
     }
+  }
+  std::ostream& operator<<(std::ostream& os, const CanFDMsg& msg){
+    os << "CAN ID:" <<  msg.id << "\r\n"
+    << "Length:" << int(msg.dataLen) << "\r\n"
+    << "Data: \r\n";
+    for(const auto& data:msg.data){
+      os<<int(data)<<" ";
+    }
+    os<<"\r\n";
+    return os;
   }
 
 } // namespace cansocket

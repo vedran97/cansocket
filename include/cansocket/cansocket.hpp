@@ -9,6 +9,12 @@
 #include <boost/container/static_vector.hpp>
 namespace cansocket
 {
+  struct CanFDMsg {
+    canid_t id;
+    boost::container::static_vector<unsigned char, CANFD_MAX_DLEN> data;
+    unsigned char dataLen;
+  };
+  std::ostream& operator<<(std::ostream& os, const CanFDMsg& pose);
   /**
    * This is a CAN socket wrapper
    * Targets : Not copyable , Defined destructor
@@ -17,10 +23,6 @@ namespace cansocket
    * Use vector's emplace_back perfect forwarding and reserve functions to
    * avoid copy and moves
    */
-  struct CanFDMsg {
-    canid_t id;
-    boost::container::static_vector<unsigned char, CANFD_MAX_DLEN> data;
-  };
   class CanSocket
   {
   public:

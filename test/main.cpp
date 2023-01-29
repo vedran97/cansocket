@@ -19,6 +19,21 @@ TEST(Socket, WriteFunctionTest){
     FAIL();
   }
 }
+TEST(Socket, ReadFunctionTest){
+  std::vector<unsigned int> canIds = {0x01,0x02};
+  try{
+    auto canSocket = cansocket::CanSocket(std::string("vcan0"),canIds,cansocket::CanSocket::eSocketType::READ_WRITE);
+    for(int i=0;i<10;i++){
+      std::cout<<"Message no "<<i<<":"<<"\r\n";
+      std::cout<<canSocket.read()<<std::endl;
+    }
+    SUCCEED();
+  }catch(const std::exception& e)
+  {
+    std::cerr<<e.what()<<std::endl;
+    FAIL();
+  }
+}
 int main(int argc, char ** argv)
 {
   ::testing::InitGoogleTest(&argc, argv);
