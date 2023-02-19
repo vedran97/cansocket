@@ -19,7 +19,7 @@ namespace cansocket
             8, 12, 16, 20, 24, 32, 48, 64};
 
   /* get data length from raw data length code (DLC) */
-  unsigned char can_fd_dlc2len(unsigned char dlc)
+  unsigned char can_fd_dlc2len(const unsigned char dlc)
   {
     return dlc2len.at(dlc & 0x0F);
   }
@@ -36,7 +36,7 @@ namespace cansocket
             15, 15, 15, 15, 15, 15, 15, 15};	/* 57 - 64 */
 
   /* map the sanitized data length to an appropriate data length code */
-  unsigned char can_fd_len2dlc(unsigned char len)
+  unsigned char can_fd_len2dlc(const unsigned char len)
   {
     if (len > 64)
       return 0xF;
